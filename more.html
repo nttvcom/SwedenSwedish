@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Швеция · история + игра</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      background: #e8e2da;
+      color: #1e2b2f;
+      line-height: 1.6;
+      padding: 1.2rem;
+    }
+
+    .page {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(255, 253, 250, 0.85);
+      backdrop-filter: blur(4px);
+      border-radius: 48px 48px 32px 32px;
+      padding: 2rem 2rem 2.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(235, 225, 215, 0.5);
+    }
+
+    .hero {
+      text-align: center;
+      padding-bottom: 0.8rem;
+    }
+
+    .hero h1 {
+      font-size: 3.4rem;
+      font-weight: 300;
+      letter-spacing: 3px;
+      color: #1a3540;
+      text-shadow: 0 4px 12px rgba(0, 20, 30, 0.06);
+    }
+
+    .hero h1 i {
+      color: #b58d6b;
+      font-size: 2.8rem;
+      margin: 0 0.4rem;
+      transition: transform 0.3s ease;
+    }
+
+    .hero h1 i:hover {
+      transform: rotate(6deg) scale(1.08);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #4d5f66;
+      font-weight: 300;
+      background: rgba(225, 215, 203, 0.25);
+      display: inline-block;
+      padding: 0.3rem 2rem;
+      border-radius: 60px;
+      backdrop-filter: blur(2px);
+      border: 1px solid #dad0c4;
+      margin-top: 0.2rem;
+      letter-spacing: 0.5px;
+    }
+
+    .divider {
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(90deg, #cbb9a8, #e3d7cb, #cbb9a8);
+      margin: 0.8rem auto 1.5rem;
+      border-radius: 10px;
+    }
+
+    /* ИСТОРИЧЕСКАЯ СЕКЦИЯ */
+    .history-section {
+      background: #f3ede6;
+      border-radius: 32px;
+      padding: 1.8rem 2rem 2rem;
+      border: 1px solid #e5dad0;
+      margin-bottom: 1.8rem;
+    }
+
+    .history-section h2 {
+      font-weight: 300;
+      font-size: 1.6rem;
+      color: #1e3b4a;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .history-section h2 i {
+      color: #b58d6b;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .history-card {
+      background: #fcf9f5;
+      border-radius: 20px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e3d7cb;
+      transition: all 0.2s ease;
+    }
+
+    .history-card:hover {
+      transform: translateY(-3px);
+      border-color: #b09883;
+    }
+
+    .history-card .year {
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: #1a3540;
+    }
+
+    .history-card .year i {
+      color: #b58d6b;
+      margin-right: 6px;
+    }
+
+    .history-card .event {
+      font-weight: 300;
+      color: #2b474f;
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .history-card .tag {
+      display: inline-block;
+      margin-top: 6px;
+      background: #dad0c4;
+      padding: 0.1rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.65rem;
+      letter-spacing: 0.5px;
+      color: #2f3f44;
+    }
+
+    .history-full {
+      background: #fcf9f5;
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      border: 1px solid #e3d7cb;
+      margin-top: 0.5rem;
+    }
+
+    .history-full p {
+      font-weight: 300;
+      color: #3d585f;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+
+    .history-full i {
+      color: #b58d6b;
+      margin-right: 6px;
+    }
+
+    /* КНОПКА СТАРТА */
+    .start-game-wrapper {
+      text-align: center;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .btn-start {
+      background: #1e3b4a;
+      border: none;
+      padding: 1rem 3.5rem;
+      border-radius: 60px;
+      color: #fcf7f0;
+      font-size: 1.3rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(20, 40, 50, 0.15);
+      transition: all 0.3s ease;
+      border: 1px solid #3d5b68;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-family: inherit;
+    }
+
+    .btn-start i {
+      font-size: 1.4rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-start:hover {
+      background: #14303c;
+      transform: scale(1.03);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-start:hover i {
+      transform: translateX(6px) scale(1.1);
+    }
+
+    /* ИГРОВАЯ ЗОНА (скрыта по умолчанию) */
+    .game-area {
+      background: #f3ede6;
+      border-radius: 32px;
+      padding: 1.8rem 1.8rem 2rem;
+      border: 1px solid #e5dad0;
+      margin: 0.5rem 0 1.5rem;
+      display: none;
+    }
+
+    .game-area.active {
+      display: block;
+      animation: fadeSlide 0.5s ease;
+    }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .photo-container {
+      border-radius: 24px;
+      overflow: hidden;
+      background: #d9cec0;
+      height: 260px;
+      margin-bottom: 1.5rem;
+      position: relative;
+      border: 2px solid #d2c4b6;
+    }
+
+    .photo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-container .placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 1.8rem;
+      color: #8b7a6b;
+      background: #d9cec0;
+      font-weight: 300;
+    }
+
+    .photo-container .placeholder i {
+      margin-right: 12px;
+      color: #b58d6b;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .score-box {
+      background: #fcf9f5;
+      padding: 0.3rem 1.4rem;
+      border-radius: 60px;
+      border: 1px solid #d2c4b6;
+      font-size: 1rem;
+      font-weight: 300;
+      color: #1e3b4a;
+    }
+
+    .score-box i {
+      color: #b58d6b;
+      margin-right: 6px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: #2b474f;
+      padding: 0.2rem 0 0.6rem;
+    }
+
+    .question-text i {
+      color: #b58d6b;
+      margin-right: 6px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+      margin: 0.6rem 0 1rem;
+    }
+
+    .option-btn {
+      background: #fcf9f5;
+      border: 2px solid #e3d7cb;
+      border-radius: 60px;
+      padding: 0.6rem 1rem;
+      font-size: 0.98rem;
+      font-weight: 300;
+      color: #1e3b4a;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      font-family: inherit;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: #e5d9ce;
+      border-color: #b09883;
+      transform: scale(1.02);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+      opacity: 0.7;
+    }
+
+    .option-btn.correct {
+      background: #7faf7f;
+      border-color: #3d7a3d;
+      color: white;
+    }
+
+    .option-btn.wrong {
+      background: #c97a7a;
+      border-color: #a34a4a;
+      color: white;
+    }
+
+    .feedback {
+      min-height: 2.8rem;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      margin: 0.2rem 0 0.8rem;
+      font-weight: 300;
+      font-size: 0.98rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .feedback i {
+      font-size: 1.2rem;
+    }
+
+    .feedback.success {
+      background: rgba(127, 175, 127, 0.2);
+      color: #2d5a2d;
+      border: 1px solid #7faf7f;
+    }
+
+    .feedback.error {
+      background: rgba(201, 122, 122, 0.2);
+      color: #7a3a3a;
+      border: 1px solid #c97a7a;
+    }
+
+    .feedback.info {
+      background: rgba(200, 185, 165, 0.25);
+      color: #4d5f66;
+      border: 1px solid #d2c4b6;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.3rem;
+    }
+
+    .btn {
+      background: #1e3b4a;
+      border: none;
+      padding: 0.6rem 1.8rem;
+      border-radius: 60px;
+      color: #fcf7f0;
+      font-size: 0.95rem;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(20, 40, 50, 0.08);
+      transition: all 0.2s ease;
+      border: 1px solid #3d5b68;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .btn i {
+      font-size: 1rem;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #14303c;
+      transform: scale(1.02);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #8b7a6b;
+      border-color: #9e8b7a;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #7a6a5d;
+    }
+
+    .result-box {
+      text-align: center;
+      padding: 1.2rem;
+      background: #fcf9f5;
+      border-radius: 32px;
+      border: 2px solid #e3d7cb;
+      margin-top: 1rem;
+    }
+
+    .result-box h3 {
+      font-weight: 300;
+      font-size: 1.5rem;
+      color: #1a3540;
+    }
+
+    .result-box h3 i {
+      color: #b58d6b;
+    }
+
+    .result-box .final-score {
+      font-size: 2rem;
+      font-weight: 300;
+      color: #1e3b4a;
+      margin: 0.2rem 0;
+    }
+
+    .result-box .final-score span {
+      font-weight: 400;
+      color: #b58d6b;
+    }
+
+    .footer {
+      margin-top: 1.8rem;
+      text-align: center;
+      color: #6d7f84;
+      font-weight: 300;
+      border-top: 1px solid #ddd2c6;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 1.2rem;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+      .photo-container {
+        height: 180px;
+      }
+      .history-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .btn-start {
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .history-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <h1>
+      <i class="fas fa-flag"></i> Швеция <i class="fas fa-tree"></i>
+    </h1>
+    <p><i class="fas fa-map-pin" style="margin-right: 6px; color:#a1856d;"></i> история · культура · игра</p>
+    <div class="divider"></div>
+  </div>
+
+  <!-- ИСТОРИЧЕСКАЯ СЕКЦИЯ -->
+  <div class="history-section" id="historySection">
+    <h2><i class="fas fa-clock-rotate-left"></i> История Швеции</h2>
+    <div class="history-grid">
+      <div class="history-card">
+        <div class="year"><i class="fas fa-calendar-day"></i> 800–1050</div>
+        <div class="event">Эпоха викингов — походы, торговля и основание первых городов.</div>
+        <span class="tag">⛵ древность</span>
+      </div>
+      <div class="history-card">
+        <div class="year"><i class="fas fa-calendar-day"></i> 1252</div>
+        <div class="event">Первое упоминание Стокгольма как города, основание ярлом Биргером.</div>
+        <span class="tag">🏰 средневековье</span>
+      </div>
+      <div class="history-card">
+        <div class="year"><i class="fas fa-calendar-day"></i> 1523</div>
+        <div class="event">Густав Васа освобождает Швецию от датского владычества.</div>
+        <span class="tag">👑 независимость</span>
+      </div>
+      <div class="history-card">
+        <div class="year"><i class="fas fa-calendar-day"></i> 1634</div>
+        <div class="event">Стокгольм официально становится столицей Шведской империи.</div>
+        <span class="tag">🏛️ империя</span>
+      </div>
+      <div class="history-card">
+        <div class="year"><i class="fas fa-calendar-day"></i> 1809</div>
+        <div class="event">Принятие конституции, начало эпохи парламентаризма.</div>
+        <span class="tag">📜 реформы</span>
+      </div>
+      <div class="history-card">
+        <div class="year"><i class="fas fa-calendar-day"></i> 1900–наши дни</div>
+        <div class="event">Швеция — нейтральное государство, центр дизайна и инноваций.</div>
+        <span class="tag">🇸🇪 современность</span>
+      </div>
+    </div>
+
+    <div class="history-full">
+      <p>
+        <i class="fas fa-info-circle"></i> 
+        <strong>Краткая история:</strong> Швеция — одна из древнейших европейских стран. 
+        От викингов до современной социальной модели — страна прошла путь от воинственного королевства до нейтрального государства с высоким уровнем жизни. 
+        Стокгольм, основанный в XIII веке, стал её сердцем — культурным, политическим и экономическим центром. 
+        Сегодня Швеция славится своей природой, дизайном и инновациями.
+      </p>
+    </div>
+
+    <!-- КНОПКА СТАРТА -->
+    <div class="start-game-wrapper">
+      <button class="btn-start" id="startGameBtn">
+        <i class="fas fa-play-circle"></i> Начать игру «Шведогессер»
+      </button>
+    </div>
+  </div>
+
+  <!-- ИГРОВАЯ ЗОНА -->
+  <div class="game-area" id="gameArea">
+    <div class="photo-container" id="photoContainer">
+      <img id="cityPhoto" src="" alt="Фото города">
+      <div class="placeholder" id="placeholder" style="display: none;">
+        <i class="fas fa-image"></i> Загрузка...
+      </div>
+    </div>
+
+    <div class="score-row">
+      <div class="score-box">
+        <i class="fas fa-star"></i> Счёт: <span id="scoreDisplay">0</span>
+      </div>
+      <div class="score-box">
+        <i class="fas fa-layer-group"></i> Вопрос: <span id="questionNum">1</span>/<span id="totalQuestions">8</span>
+      </div>
+    </div>
+
+    <div class="question-text">
+      <i class="fas fa-question-circle"></i> Какой город изображён на фото?
+    </div>
+
+    <div class="options-grid" id="optionsGrid">
+      <button class="option-btn" data-index="0">—</button>
+      <button class="option-btn" data-index="1">—</button>
+      <button class="option-btn" data-index="2">—</button>
+      <button class="option-btn" data-index="3">—</button>
+    </div>
+
+    <div class="feedback info" id="feedback">
+      <i class="fas fa-info-circle"></i> Выберите вариант ответа
+    </div>
+
+    <div class="action-row">
+      <button class="btn" id="nextBtn" disabled><i class="fas fa-arrow-right"></i> Следующий</button>
+      <button class="btn btn-secondary" id="resetGameBtn"><i class="fas fa-rotate-right"></i> Начать заново</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><i class="fas fa-camera"></i> Фото: Picsum · города Швеции</span>
+    <span><i class="fas fa-map-marked-alt"></i> 6 городов + бонус</span>
+    <span><i class="fas fa-sailboat"></i> шведогессер</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // БАЗА ДАННЫХ: города Швеции
+    const cities = [
+      { name: 'Стокгольм', id: 1043, desc: 'Столица на 14 островах' },
+      { name: 'Гётеборг', id: 1018, desc: 'Портовый город на западе' },
+      { name: 'Мальмё', id: 1040, desc: 'Южный город, мост в Данию' },
+      { name: 'Уппсала', id: 1049, desc: 'Древний университетский город' },
+      { name: 'Лунд', id: 1039, desc: 'Старейший университет Швеции' },
+      { name: 'Хельсингборг', id: 1044, desc: 'Город на побережье Эресунна' },
+      { name: 'Линчёпинг', id: 1025, desc: 'Центр авиационной промышленности' },
+      { name: 'Эребру', id: 1069, desc: 'Город с замком на воде' }
+    ];
+
+    const allCityNames = cities.map(c => c.name);
+
+    // Элементы игры
+    const gameArea = document.getElementById('gameArea');
+    const startBtn = document.getElementById('startGameBtn');
+    const photo = document.getElementById('cityPhoto');
+    const placeholder = document.getElementById('placeholder');
+    const optionsBtns = document.querySelectorAll('.option-btn');
+    const feedback = document.getElementById('feedback');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const questionNum = document.getElementById('questionNum');
+    const totalQuestions = document.getElementById('totalQuestions');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetGameBtn = document.getElementById('resetGameBtn');
+
+    // Состояние
+    let gameState = {
+      currentQuestion: 0,
+      score: 0,
+      answered: false,
+      questions: [],
+      totalQuestions: 8,
+      isActive: false
+    };
+
+    // Перемешивание
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Генерация вопросов
+    function generateQuestions() {
+      const shuffled = shuffleArray([...cities]);
+      const selected = shuffled.slice(0, Math.min(8, cities.length));
+      return selected.map(city => {
+        let distractors = allCityNames.filter(name => name !== city.name);
+        distractors = shuffleArray(distractors).slice(0, 3);
+        while (distractors.length < 3) {
+          const fallback = ['Стокгольм', 'Гётеборг', 'Мальмё'].filter(n => n !== city.name && !distractors.includes(n));
+          if (fallback.length) distractors.push(fallback[0]);
+          else distractors.push('Швеция');
+        }
+        const options = shuffleArray([city.name, ...distractors]);
+        return {
+          city: city,
+          options: options,
+          correctIndex: options.indexOf(city.name)
+        };
+      });
+    }
+
+    // Загрузка вопроса
+    function loadQuestion(index) {
+      const q = gameState.questions[index];
+      if (!q) {
+        showGameOver();
+        return;
+      }
+
+      gameState.answered = false;
+      nextBtn.disabled = true;
+
+      const city = q.city;
+      const imgId = city.id || 1043;
+      photo.src = `https://picsum.photos/id/${imgId}/800/500`;
+      photo.style.display = 'block';
+      placeholder.style.display = 'none';
+
+      photo.onerror = function() {
+        photo.style.display = 'none';
+        placeholder.style.display = 'flex';
+        placeholder.innerHTML = `<i class="fas fa-image"></i> ${city.name}`;
+      };
+
+      q.options.forEach((option, idx) => {
+        optionsBtns[idx].textContent = option;
+        optionsBtns[idx].disabled = false;
+        optionsBtns[idx].className = 'option-btn';
+        optionsBtns[idx].dataset.correct = (idx === q.correctIndex) ? 'true' : 'false';
+      });
+
+      feedback.className = 'feedback info';
+      feedback.innerHTML = `<i class="fas fa-info-circle"></i> Выберите вариант ответа`;
+
+      questionNum.textContent = index + 1;
+      totalQuestions.textContent = gameState.questions.length;
+      scoreDisplay.textContent = gameState.score;
+    }
+
+    // Обработчик выбора
+    function handleOptionClick(e) {
+      const btn = e.currentTarget;
+      if (btn.disabled || gameState.answered || !gameState.isActive) return;
+
+      const isCorrect = btn.dataset.correct === 'true';
+      const q = gameState.questions[gameState.currentQuestion];
+      const correctName = q.city.name;
+
+      optionsBtns.forEach(b => b.disabled = true);
+      gameState.answered = true;
+
+      optionsBtns.forEach((b, idx) => {
+        if (b.dataset.correct === 'true') {
+          b.classList.add('correct');
+        } else if (b === btn && !isCorrect) {
+          b.classList.add('wrong');
+        }
+      });
+
+      if (isCorrect) {
+        gameState.score += 1;
+        scoreDisplay.textContent = gameState.score;
+        feedback.className = 'feedback success';
+        feedback.innerHTML = `<i class="fas fa-check-circle"></i> ✅ Верно! Это ${correctName}.`;
+      } else {
+        feedback.className = 'feedback error';
+        feedback.innerHTML = `<i class="fas fa-times-circle"></i> ❌ Неверно. Правильный ответ: ${correctName}.`;
+      }
+
+      nextBtn.disabled = false;
+    }
+
+    // Следующий вопрос
+    function nextQuestion() {
+      if (gameState.currentQuestion + 1 < gameState.questions.length) {
+        gameState.currentQuestion++;
+        loadQuestion(gameState.currentQuestion);
+      } else {
+        showGameOver();
+      }
+    }
+
+    // Конец игры
+    function showGameOver() {
+      const total = gameState.questions.length;
+      const score = gameState.score;
+      const percent = Math.round((score / total) * 100);
+
+      photo.style.display = 'none';
+      placeholder.style.display = 'flex';
+      placeholder.innerHTML = `<i class="fas fa-trophy"></i> Игра завершена!`;
+
+      optionsBtns.forEach(b => {
+        b.disabled = true;
+        b.textContent = '—';
+        b.className = 'option-btn';
+      });
+
+      feedback.className = 'feedback info';
+      feedback.innerHTML = `<i class="fas fa-star"></i> Вы набрали ${score} из ${total} (${percent}%)`;
+
+      nextBtn.disabled = true;
+      questionNum.textContent = '🎯';
+      totalQuestions.textContent = total;
+
+      const existing = document.getElementById('resultBox');
+      if (existing) existing.remove();
+
+      const resultBox = document.createElement('div');
+      resultBox.className = 'result-box';
+      resultBox.id = 'resultBox';
+      resultBox.innerHTML = `
+        <h3><i class="fas fa-flag"></i> Шведогессер</h3>
+        <div class="final-score">${score} <span>/</span> ${total}</div>
+        <p style="font-weight:300;color:#4d5f66;margin-top:4px;">${percent >= 70 ? 'Отлично! Вы знаток Швеции! 🇸🇪' : percent >= 40 ? 'Неплохо! Повторите города Швеции.' : 'Попробуйте ещё раз!'}</p>
+      `;
+      gameArea.appendChild(resultBox);
+      scoreDisplay.textContent = score;
+    }
+
+    // Сброс игры
+    function resetGame() {
+      const existing = document.getElementById('resultBox');
+      if (existing) existing.remove();
+
+      gameState.currentQuestion = 0;
+      gameState.score = 0;
+      gameState.answered = false;
+      gameState.questions = generateQuestions();
+      gameState.totalQuestions = gameState.questions.length;
+
+      scoreDisplay.textContent = '0';
+      nextBtn.disabled = true;
+
+      if (gameState.isActive) {
+        loadQuestion(0);
+      }
+    }
+
+    // ЗАПУСК ИГРЫ
+    function startGame() {
+      gameState.isActive = true;
+      gameArea.classList.add('active');
+      
+      // Плавный скролл к игре
+      gameArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Сбрасываем игру
+      const existing = document.getElementById('resultBox');
+      if (existing) existing.remove();
+
+      gameState.currentQuestion = 0;
+      gameState.score = 0;
+      gameState.answered = false;
+      gameState.questions = generateQuestions();
+      gameState.totalQuestions = gameState.questions.length;
+
+      scoreDisplay.textContent = '0';
+      nextBtn.disabled = true;
+
+      loadQuestion(0);
+    }
+
+    // Инициализация обработчиков
+    function init() {
+      optionsBtns.forEach(btn => {
+        btn.addEventListener('click', handleOptionClick);
+      });
+
+      nextBtn.addEventListener('click', nextQuestion);
+
+      resetGameBtn.addEventListener('click', function() {
+        if (gameState.isActive) {
+          resetGame();
+        } else {
+          startGame();
+        }
+      });
+
+      startBtn.addEventListener('click', startGame);
+
+      // Если игра уже активна, но была свёрнута
+      // Делаем сброс при первом запуске
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>
