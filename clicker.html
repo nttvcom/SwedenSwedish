@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,6 +60,18 @@
         .game-container.win h1 {
             color: #f7d44a !important;
             text-shadow: 0 0 30px rgba(255,215,0,0.5) !important;
+        }
+        .game-container.win .click-btn {
+            opacity: 0.7 !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+        .game-container.win .shop-item .buy-btn,
+        .game-container.win .fika-area .buy-btn,
+        .game-container.win .prestige-btn {
+            opacity: 0.8 !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
         }
         .win-overlay {
             position: absolute;
@@ -270,18 +282,39 @@
         .fika-timer { background: #1f3a2a; color: #f2e8d0; padding: 4px 14px; border-radius: 40px; font-weight: 700; font-size: 0.9rem; }
         .bottom-area { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 8px; }
         .bottom-area .badge { background: #2d4a3d; color: #f2e8d0; padding: 2px 14px; border-radius: 30px; font-size: 0.8rem; }
-        .reset-btn, .prestige-btn {
+        .reset-btn, .prestige-btn, .win-btn {
             border: none;
             padding: 5px 16px;
             border-radius: 40px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             font-size: 0.8rem;
+            transition: 0.2s;
         }
         .reset-btn { background: #3d2e24; color: #d6c9bc; }
         .prestige-btn { background: #f7d44a; color: #1a2a1a; box-shadow: 0 4px 0 #b8860b; }
         .prestige-btn:active { transform: translateY(4px); box-shadow: 0 0px 0 #b8860b; }
         .prestige-btn:disabled { opacity: 0.4; transform: translateY(2px); box-shadow: 0 2px 0 #b8860b; pointer-events: none; }
+        .win-btn {
+            background: linear-gradient(145deg, #f7d44a, #f5b342);
+            color: #1a2a1a;
+            box-shadow: 0 4px 0 #b8860b, 0 0 20px rgba(255,215,0,0.3);
+            animation: winPulse 1s infinite alternate;
+            font-size: 1rem;
+            padding: 8px 24px;
+        }
+        .win-btn:active { transform: translateY(4px); box-shadow: 0 0px 0 #b8860b; }
+        .win-btn:disabled {
+            opacity: 0.3;
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b8860b;
+            pointer-events: none;
+            animation: none;
+        }
+        @keyframes winPulse {
+            0% { box-shadow: 0 4px 0 #b8860b, 0 0 20px rgba(255,215,0,0.2); }
+            100% { box-shadow: 0 4px 0 #b8860b, 0 0 40px rgba(255,215,0,0.6); }
+        }
         .click-popup {
             position: fixed;
             font-weight: 900;
@@ -327,6 +360,10 @@
             0% { transform: scale(1); }
             100% { transform: scale(1.05); }
         }
+        .lang-sv .label-sv { display: inline; }
+        .lang-sv .label-ru { display: none; }
+        .lang-ru .label-sv { display: none; }
+        .lang-ru .label-ru { display: inline; }
         @media (max-width: 800px) {
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .click-buttons { grid-template-columns: 1fr 1fr; }
@@ -341,8 +378,12 @@
     </style>
 </head>
 <body>
-<div class="game-container" id="app" :class="{ win: gameWon }">
-    <h1>🇸🇪 Sverige Clicker <span v-if="gameWon" class="win-badge">🏆 DU BOR I SVERIGE!</span></h1>
+<div class="game-container" id="app" :class="{ win: gameWon, 'lang-sv': gameWon }">
+    <h1>
+        <span v-if="!gameWon">🇸🇪 Sverige Clicker</span>
+        <span v-if="gameWon">🇸🇪 Sverige Klicker</span>
+        <span v-if="gameWon" class="win-badge">🏆 DU BOR I SVERIGE!</span>
+    </h1>
 
     <!-- Победный оверлей -->
     <div class="win-overlay" :class="{ show: gameWon }">
@@ -354,22 +395,43 @@
     <!-- Основные ресурсы -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="label">💰 Крона</div>
+            <div class="label">
+                <span class="label-ru">💰 Крона</span>
+                <span class="label-sv">💰 Krona</span>
+            </div>
             <div class="value">{{ kr.toFixed(1) }}</div>
-            <div class="per-sec" :class="krPerSec > 0 ? 'positive' : 'zero'">+{{ krPerSec.toFixed(1) }}/с</div>
+            <div class="per-sec" :class="krPerSec > 0 ? 'positive' : 'zero'">
+                <span class="label-ru">+{{ krPerSec.toFixed(1) }}/с</span>
+                <span class="label-sv">+{{ krPerSec.toFixed(1) }}/s</span>
+            </div>
         </div>
         <div class="stat-card">
-            <div class="label">🏠 IKLicks</div>
+            <div class="label">
+                <span class="label-ru">🏠 IKLicks</span>
+                <span class="label-sv">🏠 IKLicks</span>
+            </div>
             <div class="value">{{ ik.toFixed(1) }}</div>
-            <div class="per-sec" :class="ikPerSec > 0 ? 'positive' : 'zero'">+{{ ikPerSec.toFixed(1) }}/с</div>
+            <div class="per-sec" :class="ikPerSec > 0 ? 'positive' : 'zero'">
+                <span class="label-ru">+{{ ikPerSec.toFixed(1) }}/с</span>
+                <span class="label-sv">+{{ ikPerSec.toFixed(1) }}/s</span>
+            </div>
         </div>
         <div class="stat-card">
-            <div class="label">⛏️ Notch</div>
+            <div class="label">
+                <span class="label-ru">⛏️ Notch</span>
+                <span class="label-sv">⛏️ Notch</span>
+            </div>
             <div class="value">{{ notch.toFixed(1) }}</div>
-            <div class="per-sec" :class="notchPerSec > 0 ? 'positive' : 'zero'">+{{ notchPerSec.toFixed(1) }}/с</div>
+            <div class="per-sec" :class="notchPerSec > 0 ? 'positive' : 'zero'">
+                <span class="label-ru">+{{ notchPerSec.toFixed(1) }}/с</span>
+                <span class="label-sv">+{{ notchPerSec.toFixed(1) }}/s</span>
+            </div>
         </div>
         <div class="stat-card">
-            <div class="label">☕ Fika</div>
+            <div class="label">
+                <span class="label-ru">☕ Fika</span>
+                <span class="label-sv">☕ Fika</span>
+            </div>
             <div class="value">{{ fika.toFixed(1) }}</div>
             <div class="per-sec fika-auto">⚡ ×{{ fikaMultiplier }}</div>
         </div>
@@ -377,93 +439,293 @@
 
     <!-- Дополнительные статы -->
     <div class="stats-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; margin-top: 4px;">
-        <div class="stat-card"><div class="label">👷 Жители</div><div class="value">{{ residents }}</div></div>
-        <div class="stat-card"><div class="label">🏠 Дома</div><div class="value">{{ houses }}</div></div>
-        <div class="stat-card"><div class="label">🪑 Уровень Икеи</div><div class="value">{{ ikeaLevel }}</div></div>
-        <div class="stat-card"><div class="label">⚡ Крафт Notch</div><div class="value" style="color:#f7d44a;">+{{ notchMultiplier }}</div></div>
-        <div class="stat-card"><div class="label">🏗️ Стройка IKEA</div><div class="value" style="color:#0058a3;">+{{ ikeaBuildMultiplier }}</div></div>
-        <div class="stat-card"><div class="label">🔧 Улучшение Fika</div><div class="value" style="color:#8f6a4b;">×{{ fikaLevel + 3 }}</div></div>
+        <div class="stat-card">
+            <div class="label">
+                <span class="label-ru">👷 Жители</span>
+                <span class="label-sv">👷 Invånare</span>
+            </div>
+            <div class="value">{{ residents }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">
+                <span class="label-ru">🏠 Дома</span>
+                <span class="label-sv">🏠 Hus</span>
+            </div>
+            <div class="value">{{ houses }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">
+                <span class="label-ru">🪑 Уровень Икеи</span>
+                <span class="label-sv">🪑 IKEA Nivå</span>
+            </div>
+            <div class="value">{{ ikeaLevel }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">
+                <span class="label-ru">⚡ Крафт Notch</span>
+                <span class="label-sv">⚡ Notch Craft</span>
+            </div>
+            <div class="value" style="color:#f7d44a;">+{{ notchMultiplier }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">
+                <span class="label-ru">🏗️ Стройка IKEA</span>
+                <span class="label-sv">🏗️ IKEA Bygge</span>
+            </div>
+            <div class="value" style="color:#0058a3;">+{{ ikeaBuildMultiplier }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">
+                <span class="label-ru">🔧 Улучшение Fika</span>
+                <span class="label-sv">🔧 Fika Uppgradering</span>
+            </div>
+            <div class="value" style="color:#8f6a4b;">×{{ fikaLevel + 3 }}</div>
+        </div>
     </div>
 
     <!-- Кнопки кликов -->
     <div class="click-buttons">
         <button class="click-btn btn-kr" @click="clickKr">
             <span class="badge" v-if="notchMultiplier > 0">+{{ notchMultiplier }}</span>
-            <span class="icon">🇸🇪</span> kr <span class="sub">+{{ notchMultiplier + 1 }}</span>
+            <span class="icon">🇸🇪</span>
+            <span class="label-ru">kr</span>
+            <span class="label-sv">kr</span>
+            <span class="sub">+{{ notchMultiplier + 1 }}</span>
         </button>
         <button class="click-btn btn-ikea" @click="clickIk">
             <span class="badge" v-if="ikeaBuildMultiplier > 0">+{{ ikeaBuildMultiplier }}</span>
-            <span class="icon">IKEA</span> IKL <span class="sub">+{{ ikeaBuildMultiplier + 1 }}</span>
+            <span class="icon">IKEA</span>
+            <span class="label-ru">IKL</span>
+            <span class="label-sv">IKL</span>
+            <span class="sub">+{{ ikeaBuildMultiplier + 1 }}</span>
         </button>
-        <button class="click-btn btn-minecraft" @click="clickNotch"><span class="icon">🟫</span> Notch <span class="sub">+{{ fikaMultiplier }}</span></button>
-        <button class="click-btn btn-fika" :class="{ active: fikaActive }" @click="clickFika"><span class="icon">☕</span> Fika <span class="sub">+{{ fikaMultiplier }}</span></button>
+        <button class="click-btn btn-minecraft" @click="clickNotch">
+            <span class="icon">🟫</span>
+            <span>Notch</span>
+            <span class="sub">+{{ fikaMultiplier }}</span>
+        </button>
+        <button class="click-btn btn-fika" :class="{ active: fikaActive }" @click="clickFika">
+            <span class="icon">☕</span>
+            <span>Fika</span>
+            <span class="sub">+{{ fikaMultiplier }}</span>
+        </button>
     </div>
 
     <!-- Магазин -->
     <div class="shop-grid">
         <div class="shop-item">
-            <div class="info"><span class="name">🏛️ Государство</span><span class="cost">💰 {{ govCost }} kr</span></div>
-            <button class="buy-btn" @click="buyGov" :disabled="kr < govCost">+1 (+0.5 kr/с)</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">🏛️ Государство</span>
+                    <span class="label-sv">🏛️ Staten</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">💰 {{ govCost }} kr</span>
+                    <span class="label-sv">💰 {{ govCost }} kr</span>
+                </span>
+            </div>
+            <button class="buy-btn" @click="buyGov" :disabled="kr < govCost">
+                <span class="label-ru">+1 (+0.5 kr/с)</span>
+                <span class="label-sv">+1 (+0.5 kr/s)</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">🏠 Дом</span><span class="cost">💰 {{ houseCost }} kr</span></div>
-            <button class="buy-btn" @click="buyHouse" :disabled="kr < houseCost">+1 (+1 житель)</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">🏠 Дом</span>
+                    <span class="label-sv">🏠 Hus</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">💰 {{ houseCost }} kr</span>
+                    <span class="label-sv">💰 {{ houseCost }} kr</span>
+                </span>
+            </div>
+            <button class="buy-btn" @click="buyHouse" :disabled="kr < houseCost">
+                <span class="label-ru">+1 (+1 житель)</span>
+                <span class="label-sv">+1 (+1 invånare)</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">🪑 Улучшить Икею</span><span class="cost">🏠 {{ ikeaUpgradeCost }} IKL</span></div>
-            <button class="buy-btn blue" @click="upgradeIkea" :disabled="ik < ikeaUpgradeCost">+1 ур.</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">🪑 Улучшить Икею</span>
+                    <span class="label-sv">🪑 Uppgradera IKEA</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">🏠 {{ ikeaUpgradeCost }} IKL</span>
+                    <span class="label-sv">🏠 {{ ikeaUpgradeCost }} IKL</span>
+                </span>
+            </div>
+            <button class="buy-btn blue" @click="upgradeIkea" :disabled="ik < ikeaUpgradeCost">
+                <span class="label-ru">+1 ур.</span>
+                <span class="label-sv">+1 nivå</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">⚡ Крафт Notch</span><span class="cost">⛏️ {{ notchUpgradeCost }} Notch</span></div>
-            <button class="buy-btn green" @click="upgradeNotch" :disabled="notch < notchUpgradeCost">+1 kr/клик</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">⚡ Крафт Notch</span>
+                    <span class="label-sv">⚡ Notch Craft</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">⛏️ {{ notchUpgradeCost }} Notch</span>
+                    <span class="label-sv">⛏️ {{ notchUpgradeCost }} Notch</span>
+                </span>
+            </div>
+            <button class="buy-btn green" @click="upgradeNotch" :disabled="notch < notchUpgradeCost">
+                <span class="label-ru">+1 kr/клик</span>
+                <span class="label-sv">+1 kr/klick</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">🏗️ Стройка IKEA</span><span class="cost">🏠 {{ ikeaBuildCost }} IKL</span></div>
-            <button class="buy-btn blue" @click="upgradeIkeaBuild" :disabled="ik < ikeaBuildCost">+1 IKL/клик</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">🏗️ Стройка IKEA</span>
+                    <span class="label-sv">🏗️ IKEA Bygge</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">🏠 {{ ikeaBuildCost }} IKL</span>
+                    <span class="label-sv">🏠 {{ ikeaBuildCost }} IKL</span>
+                </span>
+            </div>
+            <button class="buy-btn blue" @click="upgradeIkeaBuild" :disabled="ik < ikeaBuildCost">
+                <span class="label-ru">+1 IKL/клик</span>
+                <span class="label-sv">+1 IKL/klick</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">🌾 Ферма</span><span class="cost">💰 {{ farmCost }} kr</span></div>
-            <button class="buy-btn gold" @click="buyFarm" :disabled="kr < farmCost">+1 (+0.3 kr/с)</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">🌾 Ферма</span>
+                    <span class="label-sv">🌾 Gård</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">💰 {{ farmCost }} kr</span>
+                    <span class="label-sv">💰 {{ farmCost }} kr</span>
+                </span>
+            </div>
+            <button class="buy-btn gold" @click="buyFarm" :disabled="kr < farmCost">
+                <span class="label-ru">+1 (+0.3 kr/с)</span>
+                <span class="label-sv">+1 (+0.3 kr/s)</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">⚙️ Завод</span><span class="cost">🏠 {{ factoryCost }} IKL</span></div>
-            <button class="buy-btn blue" @click="buyFactory" :disabled="ik < factoryCost">+1 (+0.3 IKL/с)</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">⚙️ Завод</span>
+                    <span class="label-sv">⚙️ Fabrik</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">🏠 {{ factoryCost }} IKL</span>
+                    <span class="label-sv">🏠 {{ factoryCost }} IKL</span>
+                </span>
+            </div>
+            <button class="buy-btn blue" @click="buyFactory" :disabled="ik < factoryCost">
+                <span class="label-ru">+1 (+0.3 IKL/с)</span>
+                <span class="label-sv">+1 (+0.3 IKL/s)</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">💎 Алмазная шахта</span><span class="cost">⛏️ {{ mineCost }} Notch</span></div>
-            <button class="buy-btn purple" @click="buyMine" :disabled="notch < mineCost">+1 (+0.1 Notch/с)</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">💎 Алмазная шахта</span>
+                    <span class="label-sv">💎 Diamantgruva</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">⛏️ {{ mineCost }} Notch</span>
+                    <span class="label-sv">⛏️ {{ mineCost }} Notch</span>
+                </span>
+            </div>
+            <button class="buy-btn purple" @click="buyMine" :disabled="notch < mineCost">
+                <span class="label-ru">+1 (+0.1 Notch/с)</span>
+                <span class="label-sv">+1 (+0.1 Notch/s)</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">📈 Биржа</span><span class="cost">💰 {{ marketCost }} kr</span></div>
-            <button class="buy-btn gold" @click="buyMarket" :disabled="kr < marketCost">+1 (+10% доход)</button>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">📈 Биржа</span>
+                    <span class="label-sv">📈 Börs</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">💰 {{ marketCost }} kr</span>
+                    <span class="label-sv">💰 {{ marketCost }} kr</span>
+                </span>
+            </div>
+            <button class="buy-btn gold" @click="buyMarket" :disabled="kr < marketCost">
+                <span class="label-ru">+1 (+10% доход)</span>
+                <span class="label-sv">+1 (+10% inkomst)</span>
+            </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">☕ Автодобыча Fika</span><span class="cost">💰 {{ fikaAutoCost }} kr</span></div>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">☕ Автодобыча Fika</span>
+                    <span class="label-sv">☕ Auto Fika</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">💰 {{ fikaAutoCost }} kr</span>
+                    <span class="label-sv">💰 {{ fikaAutoCost }} kr</span>
+                </span>
+            </div>
             <button class="buy-btn fika-auto-btn" @click="buyFikaAuto" :disabled="kr < fikaAutoCost || fikaAutoActive">
-                {{ fikaAutoActive ? '✅ АКТИВНО' : '+1 Fika/5с' }}
+                <span class="label-ru">{{ fikaAutoActive ? '✅ АКТИВНО' : '+1 Fika/5с' }}</span>
+                <span class="label-sv">{{ fikaAutoActive ? '✅ AKTIV' : '+1 Fika/5s' }}</span>
             </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">⚡ Автоактивация Fika</span><span class="cost">💰 {{ fikaAutoActivateCost }} kr</span></div>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">⚡ Автоактивация Fika</span>
+                    <span class="label-sv">⚡ Auto Fika Aktivering</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">💰 {{ fikaAutoActivateCost }} kr</span>
+                    <span class="label-sv">💰 {{ fikaAutoActivateCost }} kr</span>
+                </span>
+            </div>
             <button class="buy-btn gold" @click="buyFikaAutoActivate" :disabled="kr < fikaAutoActivateCost || fikaAutoActivateActive">
-                {{ fikaAutoActivateActive ? '✅ АКТИВНО' : 'Авто ×3' }}
+                <span class="label-ru">{{ fikaAutoActivateActive ? '✅ АКТИВНО' : 'Авто ×3' }}</span>
+                <span class="label-sv">{{ fikaAutoActivateActive ? '✅ AKTIV' : 'Auto ×3' }}</span>
             </button>
         </div>
         <div class="shop-item">
-            <div class="info"><span class="name">🔧 Улучшить Fika</span><span class="cost">☕ {{ fikaUpgradeCost }} Fika</span></div>
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">🔧 Улучшить Fika</span>
+                    <span class="label-sv">🔧 Uppgradera Fika</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">☕ {{ fikaUpgradeCost }} Fika</span>
+                    <span class="label-sv">☕ {{ fikaUpgradeCost }} Fika</span>
+                </span>
+            </div>
             <button class="buy-btn fika-upgrade-btn" @click="upgradeFika" :disabled="fika < fikaUpgradeCost">
-                ×{{ fikaLevel + 3 }} → ×{{ fikaLevel + 4 }}
+                <span class="label-ru">×{{ fikaLevel + 3 }} → ×{{ fikaLevel + 4 }}</span>
+                <span class="label-sv">×{{ fikaLevel + 3 }} → ×{{ fikaLevel + 4 }}</span>
             </button>
         </div>
     </div>
 
     <!-- Fika активация -->
     <div class="fika-area">
-        <div class="big">☕ Fika <span style="font-size:0.8rem; font-weight:400;">(×{{ fikaMultiplier }} ко всем кликам на 10 сек)</span></div>
+        <div class="big">
+            ☕ Fika
+            <span style="font-size:0.8rem; font-weight:400;">
+                <span class="label-ru">(×{{ fikaMultiplier }} ко всем кликам на 10 сек)</span>
+                <span class="label-sv">(×{{ fikaMultiplier }} till alla klick i 10s)</span>
+            </span>
+        </div>
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-            <span style="font-weight:600;">Цена: 5 ☕</span>
-            <button class="buy-btn" @click="activateFika" :disabled="fika < 5 || fikaActive">🔥 Активировать</button>
-            <span class="fika-timer" v-if="fikaActive">⏳ {{ fikaTimer }}с</span>
+            <span style="font-weight:600;">
+                <span class="label-ru">Цена: 5 ☕</span>
+                <span class="label-sv">Pris: 5 ☕</span>
+            </span>
+            <button class="buy-btn" @click="activateFika" :disabled="fika < 5 || fikaActive">
+                <span class="label-ru">🔥 Активировать</span>
+                <span class="label-sv">🔥 Aktivera</span>
+            </button>
+            <span class="fika-timer" v-if="fikaActive">⏳ {{ fikaTimer }}s</span>
         </div>
     </div>
 
@@ -471,15 +733,29 @@
     <div class="bottom-area">
         <div>
             <span class="badge">⚡ ×{{ fikaMultiplier }}</span>
-            <span class="badge" style="margin-left:6px;">📊 {{ totalClicks }} кликов</span>
+            <span class="badge" style="margin-left:6px;">
+                <span class="label-ru">📊 {{ totalClicks }} кликов</span>
+                <span class="label-sv">📊 {{ totalClicks }} klick</span>
+            </span>
             <span class="badge" style="margin-left:6px;">🏆 {{ achievementsCount }}</span>
-            <span v-if="gameWon" class="badge" style="margin-left:6px; background:#f7d44a; color:#1a2a1a;">🏆 ПОБЕДА!</span>
+            <span v-if="gameWon" class="badge" style="margin-left:6px; background:#f7d44a; color:#1a2a1a;">🏆 SEGER!</span>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="prestige-btn" @click="doPrestige" :disabled="kr < 1000 || prestigeCooldown > 0">
-                🌟 Престиж ({{ prestigeLevel }})
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <!-- КНОПКА ПОБЕДИТЬ - появляется ТОЛЬКО после накопления 9999 -->
+            <button class="win-btn" 
+                    v-if="canWin && !gameWon" 
+                    @click="claimVictory">
+                🏆 <span class="label-ru">ПОБЕДИТЬ!</span>
+                <span class="label-sv">VINNA!</span>
             </button>
-            <button class="reset-btn" @click="resetGame">⟳ Сброс</button>
+            <button class="prestige-btn" @click="doPrestige" :disabled="kr < 1000 || prestigeCooldown > 0 || gameWon">
+                🌟 <span class="label-ru">Престиж ({{ prestigeLevel }})</span>
+                <span class="label-sv">Prestige ({{ prestigeLevel }})</span>
+            </button>
+            <button class="reset-btn" @click="resetGame">
+                <span class="label-ru">⟳ Сброс</span>
+                <span class="label-sv">⟳ Återställ</span>
+            </button>
         </div>
     </div>
 </div>
@@ -489,12 +765,10 @@
 new Vue({
     el: '#app',
     data: {
-        // Ресурсы
         kr: 0,
         ik: 0,
         notch: 0,
         fika: 0,
-        // Апгрейды
         govCount: 0,
         houses: 0,
         ikeaLevel: 0,
@@ -504,20 +778,17 @@ new Vue({
         factories: 0,
         mines: 0,
         markets: 0,
-        // Fika
         fikaActive: false,
         fikaTimer: 0,
         fikaLevel: 0,
         fikaBonus: 1,
         fikaAutoActive: false,
         fikaAutoActivateActive: false,
-        // Престиж
         prestigeLevel: 0,
         prestigeCooldown: 0,
         totalClicks: 0,
         achievements: [],
         gameWon: false,
-        // Фракции
         krFraction: 0,
         ikFraction: 0,
         notchFraction: 0,
@@ -561,46 +832,41 @@ new Vue({
         fikaAutoCost() { return Math.floor(100 * Math.pow(2, this.fikaAutoActive ? 1 : 0)); },
         fikaAutoActivateCost() { return Math.floor(3000 * Math.pow(2, this.fikaAutoActivateActive ? 1 : 0)); },
         fikaUpgradeCost() { return Math.floor(20 * Math.pow(1.8, this.fikaLevel)); },
+        canWin() {
+            return this.kr >= 9999 && this.ik >= 9999 && this.notch >= 9999 && this.fika >= 9999;
+        },
         achievementsCount() { return this.achievements.length; },
     },
     methods: {
         // Клики
         clickKr() {
-            if (this.gameWon) return;
             let base = 1 + this.notchMultiplier;
             let total = base * this.fikaMultiplier;
             this.kr += total;
             this.totalClicks++;
             this.showPopup('+' + total.toFixed(0) + ' kr', '#f7d44a');
-            this.checkWin();
             this.checkAchievements();
         },
         clickIk() {
-            if (this.gameWon) return;
             let base = 1 + this.ikeaBuildMultiplier;
             let total = base * this.fikaMultiplier;
             this.ik += total;
             this.totalClicks++;
             this.showPopup('+' + total.toFixed(0) + ' IKL', '#0058a3');
-            this.checkWin();
             this.checkAchievements();
         },
         clickNotch() {
-            if (this.gameWon) return;
             let add = 1 * this.fikaMultiplier;
             this.notch += add;
             this.totalClicks++;
             this.showPopup('+' + add.toFixed(0) + ' Notch', '#5d7a3d');
-            this.checkWin();
             this.checkAchievements();
         },
         clickFika() {
-            if (this.gameWon) return;
             let add = 1 * this.fikaMultiplier;
             this.fika += add;
             this.totalClicks++;
             this.showPopup('+' + add.toFixed(0) + ' ☕', '#8f6a4b');
-            this.checkWin();
             this.checkAchievements();
         },
         showPopup(text, color) {
@@ -620,13 +886,14 @@ new Vue({
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 4000);
         },
-        // Проверка победы
-        checkWin() {
-            if (!this.gameWon && this.kr >= 9999 && this.ik >= 9999 && this.notch >= 9999 && this.fika >= 9999) {
+        // ПОБЕДА
+        claimVictory() {
+            if (this.canWin && !this.gameWon) {
                 this.gameWon = true;
                 document.body.classList.add('win');
-                this.showPopup('🇸🇪 DU BOR I SVERIGE!', '#f7d44a');
                 this.startConfetti();
+                this.showAchievement('🇸🇪 DU BOR I SVERIGE!');
+                this.checkAchievements();
             }
         },
         startConfetti() {
@@ -649,7 +916,6 @@ new Vue({
                 }, i * 100);
             }
             
-            // Повторяем конфетти каждые 10 секунд
             this.confettiInterval = setInterval(() => {
                 for (let i = 0; i < 20; i++) {
                     setTimeout(() => {
@@ -665,26 +931,23 @@ new Vue({
                 }
             }, 10000);
         },
-        // Покупки (все работают даже после победы)
+        // Покупки (ВСЕ РАБОТАЮТ ПОСЛЕ ПОБЕДЫ)
         buyGov() {
             if (this.kr >= this.govCost) {
                 this.kr -= this.govCost;
                 this.govCount++;
-                this.checkWin();
             }
         },
         buyHouse() {
             if (this.kr >= this.houseCost) {
                 this.kr -= this.houseCost;
                 this.houses++;
-                this.checkWin();
             }
         },
         upgradeIkea() {
             if (this.ik >= this.ikeaUpgradeCost) {
                 this.ik -= this.ikeaUpgradeCost;
                 this.ikeaLevel++;
-                this.checkWin();
             }
         },
         upgradeNotch() {
@@ -692,7 +955,6 @@ new Vue({
                 this.notch -= this.notchUpgradeCost;
                 this.notchUpgrades++;
                 this.showPopup('⚡ +1 kr/клик!', '#f7d44a');
-                this.checkWin();
             }
         },
         upgradeIkeaBuild() {
@@ -700,28 +962,24 @@ new Vue({
                 this.ik -= this.ikeaBuildCost;
                 this.ikeaBuildUpgrades++;
                 this.showPopup('🏗️ +1 IKL/клик!', '#0058a3');
-                this.checkWin();
             }
         },
         buyFarm() {
             if (this.kr >= this.farmCost) {
                 this.kr -= this.farmCost;
                 this.farms++;
-                this.checkWin();
             }
         },
         buyFactory() {
             if (this.ik >= this.factoryCost) {
                 this.ik -= this.factoryCost;
                 this.factories++;
-                this.checkWin();
             }
         },
         buyMine() {
             if (this.notch >= this.mineCost) {
                 this.notch -= this.mineCost;
                 this.mines++;
-                this.checkWin();
             }
         },
         buyMarket() {
@@ -729,7 +987,6 @@ new Vue({
                 this.kr -= this.marketCost;
                 this.markets++;
                 this.showPopup('📈 Доход +10%!', '#f7d44a');
-                this.checkWin();
             }
         },
         buyFikaAuto() {
@@ -739,16 +996,9 @@ new Vue({
                 this.showPopup('☕ Автодобыча Fika!', '#8f6a4b');
                 if (this.fikaAutoInterval) clearInterval(this.fikaAutoInterval);
                 this.fikaAutoInterval = setInterval(() => {
-                    if (!this.gameWon) {
-                        this.fika += 1;
-                        this.showPopup('+1 ☕ (авто)', '#8f6a4b');
-                        this.checkWin();
-                    } else {
-                        this.fika += 1;
-                        this.checkWin();
-                    }
+                    this.fika += 1;
+                    this.showPopup('+1 ☕ (авто)', '#8f6a4b');
                 }, 5000);
-                this.checkWin();
             }
         },
         buyFikaAutoActivate() {
@@ -762,7 +1012,6 @@ new Vue({
                         this.activateFika();
                     }
                 }, 1000);
-                this.checkWin();
             }
         },
         upgradeFika() {
@@ -770,7 +1019,6 @@ new Vue({
                 this.fika -= this.fikaUpgradeCost;
                 this.fikaLevel++;
                 this.showPopup('🔧 Fika ×' + (3 + this.fikaLevel) + '!', '#c47a3a');
-                this.checkWin();
                 this.checkAchievements();
             }
         },
@@ -789,10 +1037,9 @@ new Vue({
                         this.fikaInterval = null;
                     }
                 }, 1000);
-                this.checkWin();
             }
         },
-        // Престиж
+        // Престиж (недоступен после победы)
         doPrestige() {
             if (this.kr >= 1000 && this.prestigeCooldown <= 0 && !this.gameWon) {
                 this.prestigeLevel++;
@@ -827,7 +1074,6 @@ new Vue({
         },
         // Достижения
         checkAchievements() {
-            const list = [];
             if (this.totalClicks >= 10 && !this.achievements.includes('click10')) {
                 this.achievements.push('click10');
                 this.showAchievement('10 кликов!');
@@ -898,7 +1144,7 @@ new Vue({
             }
             if (this.gameWon && !this.achievements.includes('winner')) {
                 this.achievements.push('winner');
-                this.showAchievement('🏆 DU BOR I SVERIGE!');
+                this.showAchievement('🇸🇪 DU BOR I SVERIGE!');
             }
         },
         // Пассивный доход
@@ -917,10 +1163,7 @@ new Vue({
             this.notchFraction += notchIncome;
             let notchAdd = Math.floor(this.notchFraction);
             if (notchAdd > 0) { this.notch += notchAdd; this.notchFraction -= notchAdd; }
-            
-            this.checkWin();
         },
-        // Сброс игры
         resetGame() {
             if (confirm('Сбросить всё прогресс?')) {
                 localStorage.removeItem('sverigeClickerSave');
@@ -929,7 +1172,6 @@ new Vue({
         }
     },
     mounted() {
-        // Загрузка сохранения
         const load = localStorage.getItem('sverigeClickerSave');
         if (load) {
             try {
@@ -952,8 +1194,7 @@ new Vue({
                 if (this.fikaAutoActive) {
                     this.fikaAutoInterval = setInterval(() => {
                         this.fika += 1;
-                        if (!this.gameWon) this.showPopup('+1 ☕ (авто)', '#8f6a4b');
-                        this.checkWin();
+                        this.showPopup('+1 ☕ (авто)', '#8f6a4b');
                     }, 5000);
                 }
                 if (this.fikaAutoActivateActive) {
@@ -966,13 +1207,11 @@ new Vue({
             } catch(e) {}
         }
 
-        // Пассивный доход — каждую секунду
         setInterval(() => {
             this.addPassiveIncome();
             this.checkAchievements();
         }, 1000);
 
-        // Сохранение — каждые 5 секунд
         setInterval(() => {
             const save = {
                 kr: this.kr, ik: this.ik, notch: this.notch, fika: this.fika,
