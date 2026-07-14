@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sverige Clicker — Улучшаемая Fika!</title>
+    <title>Sverige Clicker — 🇸🇪</title>
     <style>
         * { box-sizing: border-box; user-select: none; font-family: 'Segoe UI', Arial, sans-serif; }
         body {
@@ -14,6 +14,15 @@
             align-items: center;
             margin: 0;
             padding: 20px;
+            transition: 0.5s;
+        }
+        body.win {
+            background: linear-gradient(145deg, #1a3a1a, #0a2a0a);
+            animation: winGlow 2s infinite alternate;
+        }
+        @keyframes winGlow {
+            0% { box-shadow: inset 0 0 50px rgba(255,215,0,0.1); }
+            100% { box-shadow: inset 0 0 100px rgba(255,215,0,0.3); }
         }
         .game-container {
             max-width: 1100px;
@@ -23,8 +32,104 @@
             padding: 25px 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.9);
             border: 2px solid #cbb59c;
+            transition: 0.5s;
+            position: relative;
+            overflow: hidden;
         }
-        h1 { text-align: center; margin: 0 0 10px; font-size: 2.2rem; font-weight: 800; color: #1a3a4b; text-shadow: 2px 2px 0 #d4c5b2; }
+        .game-container.win {
+            background: #1a3a1a;
+            border-color: #f7d44a;
+            box-shadow: 0 0 60px rgba(255,215,0,0.3), 0 20px 40px rgba(0,0,0,0.9);
+        }
+        .game-container.win .stat-card,
+        .game-container.win .shop-item,
+        .game-container.win .fika-area {
+            background: #2a4a2a !important;
+            border-color: #f7d44a !important;
+            color: #f2e8d0 !important;
+        }
+        .game-container.win .stat-card .value,
+        .game-container.win .stat-card .label,
+        .game-container.win .shop-item .name,
+        .game-container.win .shop-item .cost {
+            color: #f7d44a !important;
+        }
+        .game-container.win .stat-card .per-sec {
+            color: #aad4aa !important;
+        }
+        .game-container.win h1 {
+            color: #f7d44a !important;
+            text-shadow: 0 0 30px rgba(255,215,0,0.5) !important;
+        }
+        .win-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: 0.8s;
+            border-radius: 48px;
+        }
+        .win-overlay.show {
+            opacity: 1;
+        }
+        .win-overlay .flag {
+            font-size: 5rem;
+            animation: winText 1s ease-out;
+        }
+        .win-overlay .big-text {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #f7d44a;
+            text-shadow: 0 0 40px rgba(255,215,0,0.6), 0 4px 20px rgba(0,0,0,0.8);
+            text-align: center;
+            padding: 10px 20px;
+            animation: winText 1.5s ease-out;
+        }
+        .win-overlay .sub-text {
+            font-size: 1.5rem;
+            color: #f2e8d0;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+            text-align: center;
+            padding: 10px 30px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 60px;
+            margin-top: 10px;
+            animation: winText 1.8s ease-out;
+        }
+        @keyframes winText {
+            0% { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+            60% { transform: scale(1.1) rotate(1deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            font-size: 2rem;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+        h1 { text-align: center; margin: 0 0 10px; font-size: 2.2rem; font-weight: 800; color: #1a3a4b; text-shadow: 2px 2px 0 #d4c5b2; transition: 0.3s; }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -37,6 +142,7 @@
             border-radius: 16px;
             text-align: center;
             border-bottom: 4px solid #b8a48c;
+            transition: 0.3s;
         }
         .stat-card .label { font-size: 0.6rem; font-weight: 700; color: #4d3e2f; text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-card .value { font-size: 1.3rem; font-weight: 700; color: #1f2e3c; }
@@ -101,6 +207,7 @@
             flex-direction: column;
             border-bottom: 4px solid #b7a392;
             gap: 4px;
+            transition: 0.3s;
         }
         .shop-item .info { display: flex; flex-direction: column; }
         .shop-item .name { font-weight: 700; font-size: 0.8rem; }
@@ -143,6 +250,7 @@
             margin-top: 12px;
             flex-wrap: wrap;
             gap: 8px;
+            transition: 0.3s;
         }
         .fika-area .big { font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 12px; }
         .fika-area .buy-btn {
@@ -206,6 +314,19 @@
             0% { transform: translateX(100px); opacity: 0; }
             100% { transform: translateX(0); opacity: 1; }
         }
+        .win-badge {
+            background: #f7d44a;
+            color: #1a2a1a;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
         @media (max-width: 800px) {
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .click-buttons { grid-template-columns: 1fr 1fr; }
@@ -214,12 +335,21 @@
         @media (max-width: 500px) {
             .shop-grid { grid-template-columns: 1fr; }
             .fika-area .big { font-size: 1rem; }
+            .win-overlay .big-text { font-size: 1.8rem; }
+            .win-overlay .sub-text { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-<div class="game-container" id="app">
-    <h1>🇸🇪 Sverige Clicker</h1>
+<div class="game-container" id="app" :class="{ win: gameWon }">
+    <h1>🇸🇪 Sverige Clicker <span v-if="gameWon" class="win-badge">🏆 DU BOR I SVERIGE!</span></h1>
+
+    <!-- Победный оверлей -->
+    <div class="win-overlay" :class="{ show: gameWon }">
+        <div class="flag">🇸🇪</div>
+        <div class="big-text">DU BOR I SVERIGE!</div>
+        <div class="sub-text">То бишь ты живёшь в Швеции, иностранец хренов</div>
+    </div>
 
     <!-- Основные ресурсы -->
     <div class="stats-grid">
@@ -343,6 +473,7 @@
             <span class="badge">⚡ ×{{ fikaMultiplier }}</span>
             <span class="badge" style="margin-left:6px;">📊 {{ totalClicks }} кликов</span>
             <span class="badge" style="margin-left:6px;">🏆 {{ achievementsCount }}</span>
+            <span v-if="gameWon" class="badge" style="margin-left:6px; background:#f7d44a; color:#1a2a1a;">🏆 ПОБЕДА!</span>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="prestige-btn" @click="doPrestige" :disabled="kr < 1000 || prestigeCooldown > 0">
@@ -376,7 +507,7 @@ new Vue({
         // Fika
         fikaActive: false,
         fikaTimer: 0,
-        fikaLevel: 0, // 0 = ×3, 1 = ×4, 2 = ×5...
+        fikaLevel: 0,
         fikaBonus: 1,
         fikaAutoActive: false,
         fikaAutoActivateActive: false,
@@ -385,13 +516,15 @@ new Vue({
         prestigeCooldown: 0,
         totalClicks: 0,
         achievements: [],
-        // Фракции для точности
+        gameWon: false,
+        // Фракции
         krFraction: 0,
         ikFraction: 0,
         notchFraction: 0,
         fikaInterval: null,
         fikaAutoInterval: null,
         fikaAutoActivateInterval: null,
+        confettiInterval: null,
     },
     computed: {
         residents() { return this.houses; },
@@ -433,33 +566,41 @@ new Vue({
     methods: {
         // Клики
         clickKr() {
+            if (this.gameWon) return;
             let base = 1 + this.notchMultiplier;
             let total = base * this.fikaMultiplier;
             this.kr += total;
             this.totalClicks++;
             this.showPopup('+' + total.toFixed(0) + ' kr', '#f7d44a');
+            this.checkWin();
             this.checkAchievements();
         },
         clickIk() {
+            if (this.gameWon) return;
             let base = 1 + this.ikeaBuildMultiplier;
             let total = base * this.fikaMultiplier;
             this.ik += total;
             this.totalClicks++;
             this.showPopup('+' + total.toFixed(0) + ' IKL', '#0058a3');
+            this.checkWin();
             this.checkAchievements();
         },
         clickNotch() {
+            if (this.gameWon) return;
             let add = 1 * this.fikaMultiplier;
             this.notch += add;
             this.totalClicks++;
             this.showPopup('+' + add.toFixed(0) + ' Notch', '#5d7a3d');
+            this.checkWin();
             this.checkAchievements();
         },
         clickFika() {
+            if (this.gameWon) return;
             let add = 1 * this.fikaMultiplier;
             this.fika += add;
             this.totalClicks++;
             this.showPopup('+' + add.toFixed(0) + ' ☕', '#8f6a4b');
+            this.checkWin();
             this.checkAchievements();
         },
         showPopup(text, color) {
@@ -479,23 +620,71 @@ new Vue({
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 4000);
         },
-        // Покупки
+        // Проверка победы
+        checkWin() {
+            if (!this.gameWon && this.kr >= 9999 && this.ik >= 9999 && this.notch >= 9999 && this.fika >= 9999) {
+                this.gameWon = true;
+                document.body.classList.add('win');
+                this.showPopup('🇸🇪 DU BOR I SVERIGE!', '#f7d44a');
+                this.startConfetti();
+            }
+        },
+        startConfetti() {
+            const emojis = ['🇸🇪', '🎉', '✨', '🌟', '🎊', '👑', '🏆', '💫', '⭐'];
+            const container = document.createElement('div');
+            container.className = 'confetti-container';
+            document.body.appendChild(container);
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'confetti';
+                    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.left = Math.random() * 100 + '%';
+                    el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                    el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    el.style.animationDelay = Math.random() * 0.5 + 's';
+                    container.appendChild(el);
+                    setTimeout(() => el.remove(), 5000);
+                }, i * 100);
+            }
+            
+            // Повторяем конфетти каждые 10 секунд
+            this.confettiInterval = setInterval(() => {
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        const el = document.createElement('div');
+                        el.className = 'confetti';
+                        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                        el.style.left = Math.random() * 100 + '%';
+                        el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                        el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                        container.appendChild(el);
+                        setTimeout(() => el.remove(), 5000);
+                    }, i * 50);
+                }
+            }, 10000);
+        },
+        // Покупки (все работают даже после победы)
         buyGov() {
             if (this.kr >= this.govCost) {
                 this.kr -= this.govCost;
                 this.govCount++;
+                this.checkWin();
             }
         },
         buyHouse() {
             if (this.kr >= this.houseCost) {
                 this.kr -= this.houseCost;
                 this.houses++;
+                this.checkWin();
             }
         },
         upgradeIkea() {
             if (this.ik >= this.ikeaUpgradeCost) {
                 this.ik -= this.ikeaUpgradeCost;
                 this.ikeaLevel++;
+                this.checkWin();
             }
         },
         upgradeNotch() {
@@ -503,6 +692,7 @@ new Vue({
                 this.notch -= this.notchUpgradeCost;
                 this.notchUpgrades++;
                 this.showPopup('⚡ +1 kr/клик!', '#f7d44a');
+                this.checkWin();
             }
         },
         upgradeIkeaBuild() {
@@ -510,24 +700,28 @@ new Vue({
                 this.ik -= this.ikeaBuildCost;
                 this.ikeaBuildUpgrades++;
                 this.showPopup('🏗️ +1 IKL/клик!', '#0058a3');
+                this.checkWin();
             }
         },
         buyFarm() {
             if (this.kr >= this.farmCost) {
                 this.kr -= this.farmCost;
                 this.farms++;
+                this.checkWin();
             }
         },
         buyFactory() {
             if (this.ik >= this.factoryCost) {
                 this.ik -= this.factoryCost;
                 this.factories++;
+                this.checkWin();
             }
         },
         buyMine() {
             if (this.notch >= this.mineCost) {
                 this.notch -= this.mineCost;
                 this.mines++;
+                this.checkWin();
             }
         },
         buyMarket() {
@@ -535,6 +729,7 @@ new Vue({
                 this.kr -= this.marketCost;
                 this.markets++;
                 this.showPopup('📈 Доход +10%!', '#f7d44a');
+                this.checkWin();
             }
         },
         buyFikaAuto() {
@@ -544,9 +739,16 @@ new Vue({
                 this.showPopup('☕ Автодобыча Fika!', '#8f6a4b');
                 if (this.fikaAutoInterval) clearInterval(this.fikaAutoInterval);
                 this.fikaAutoInterval = setInterval(() => {
-                    this.fika += 1;
-                    this.showPopup('+1 ☕ (авто)', '#8f6a4b');
+                    if (!this.gameWon) {
+                        this.fika += 1;
+                        this.showPopup('+1 ☕ (авто)', '#8f6a4b');
+                        this.checkWin();
+                    } else {
+                        this.fika += 1;
+                        this.checkWin();
+                    }
                 }, 5000);
+                this.checkWin();
             }
         },
         buyFikaAutoActivate() {
@@ -560,6 +762,7 @@ new Vue({
                         this.activateFika();
                     }
                 }, 1000);
+                this.checkWin();
             }
         },
         upgradeFika() {
@@ -567,6 +770,7 @@ new Vue({
                 this.fika -= this.fikaUpgradeCost;
                 this.fikaLevel++;
                 this.showPopup('🔧 Fika ×' + (3 + this.fikaLevel) + '!', '#c47a3a');
+                this.checkWin();
                 this.checkAchievements();
             }
         },
@@ -585,15 +789,15 @@ new Vue({
                         this.fikaInterval = null;
                     }
                 }, 1000);
+                this.checkWin();
             }
         },
         // Престиж
         doPrestige() {
-            if (this.kr >= 1000 && this.prestigeCooldown <= 0) {
+            if (this.kr >= 1000 && this.prestigeCooldown <= 0 && !this.gameWon) {
                 this.prestigeLevel++;
                 this.fikaBonus = 1 + this.prestigeLevel * 0.5;
                 this.prestigeCooldown = 30;
-                // Сброс ресурсов (сохраняем престиж-бонус)
                 this.kr = 0;
                 this.ik = 0;
                 this.notch = 0;
@@ -692,6 +896,10 @@ new Vue({
                 this.achievements.push('autoActivate');
                 this.showAchievement('Автоактивация Fika!');
             }
+            if (this.gameWon && !this.achievements.includes('winner')) {
+                this.achievements.push('winner');
+                this.showAchievement('🏆 DU BOR I SVERIGE!');
+            }
         },
         // Пассивный доход
         addPassiveIncome() {
@@ -709,6 +917,8 @@ new Vue({
             this.notchFraction += notchIncome;
             let notchAdd = Math.floor(this.notchFraction);
             if (notchAdd > 0) { this.notch += notchAdd; this.notchFraction -= notchAdd; }
+            
+            this.checkWin();
         },
         // Сброс игры
         resetGame() {
@@ -725,7 +935,10 @@ new Vue({
             try {
                 const data = JSON.parse(load);
                 Object.assign(this, data);
-                // Восстанавливаем интервалы
+                if (this.gameWon) {
+                    document.body.classList.add('win');
+                    this.startConfetti();
+                }
                 if (this.fikaActive && this.fikaTimer > 0) {
                     this.fikaInterval = setInterval(() => {
                         this.fikaTimer--;
@@ -739,7 +952,8 @@ new Vue({
                 if (this.fikaAutoActive) {
                     this.fikaAutoInterval = setInterval(() => {
                         this.fika += 1;
-                        this.showPopup('+1 ☕ (авто)', '#8f6a4b');
+                        if (!this.gameWon) this.showPopup('+1 ☕ (авто)', '#8f6a4b');
+                        this.checkWin();
                     }, 5000);
                 }
                 if (this.fikaAutoActivateActive) {
@@ -776,6 +990,7 @@ new Vue({
                 prestigeCooldown: this.prestigeCooldown,
                 totalClicks: this.totalClicks,
                 achievements: this.achievements,
+                gameWon: this.gameWon,
                 krFraction: this.krFraction,
                 ikFraction: this.ikFraction,
                 notchFraction: this.notchFraction,
