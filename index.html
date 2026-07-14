@@ -3,150 +3,102 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Швеция — страна спокойствия и вдохновения</title>
-    <meta
-      name="description"
-      content="Откройте для себя Швецию: сады, северное сияние, современные города и уютные традиции."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
+    <title>Кликер — Швеция</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif;
+        background: radial-gradient(circle at top left, #70d5ff, #07131f 55%);
+        color: #f3f8ff;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 28px;
+        padding: 40px;
+        text-align: center;
+        width: min(100%, 420px);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+      }
+
+      h1 {
+        margin: 0 0 18px;
+        font-size: 2.2rem;
+      }
+
+      .count {
+        margin: 0 auto 28px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(78, 199, 243, 0.14);
+        border: 1px solid rgba(78, 199, 243, 0.32);
+        font-size: 3rem;
+        color: #eaf8ff;
+      }
+
+      .btn {
+        padding: 16px 30px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #4ec7f3, #8fd9ff);
+        color: #04131d;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .links {
+        margin-top: 24px;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .links a {
+        color: #8fd9ff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+    </style>
   </head>
   <body>
-    <header class="hero">
-      <nav class="nav">
-        <a class="brand" href="#top">Швеция</a>
-        <div class="nav-links">
-          <a href="#about">О стране</a>
-          <a href="#highlights">Особенности</a>
-          <a href="#cities">Города</a>
-        </div>
-      </nav>
-
-      <div class="hero-content" id="top">
-        <div>
-          <p class="eyebrow">Скандинавия • природа • дизайн</p>
-          <h1>Швеция — место, где природа и современность живут рядом.</h1>
-          <p class="hero-text">
-            Здесь шумят сосновые леса, сияет северное небо, а в городах царят уют,
-            инновации и высокое качество жизни.
-          </p>
-          <a class="button" href="#highlights">Узнать больше</a>
-        </div>
-        <div class="hero-card">
-          <div class="card-badge">🇸🇪</div>
-          <h3>Почему стоит посетить?</h3>
-          <ul>
-            <li>Северное сияние зимой</li>
-            <li>Тихие озёра и острова</li>
-            <li>Старинные города и современные музеи</li>
-          </ul>
-        </div>
+    <div class="card">
+      <h1>Кликер</h1>
+      <div class="count" id="count">0</div>
+      <button class="btn" id="clickBtn">Кликни меня</button>
+      <div class="links">
+        <a href="index.html">← Назад</a>
+        <a href="more.html">Больше интерактива →</a>
       </div>
-    </header>
+    </div>
 
-    <main>
-      <section id="about" class="section">
-        <div class="section-heading">
-          <p class="eyebrow">О стране</p>
-          <h2>Швеция — это спокойствие, культура и вдохновение.</h2>
-        </div>
-        <div class="about-grid">
-          <p>
-            Швеция — одна из самых красивых и прогрессивных стран Европы. Её любят за
-            чистые города, просторные леса, прозрачные воды и особую атмосферу уюта.
-            Здесь каждая поездка сочетает природу, историю и современный образ жизни.
-          </p>
-          <p>
-            В Швеции легко почувствовать баланс между активным отдыхом и спокойствием.
-            Можно провести день в музее, а вечером — на прогулке по набережной у моря.
-          </p>
-        </div>
-      </section>
+    <script>
+      const countElem = document.getElementById('count');
+      const button = document.getElementById('clickBtn');
+      let count = 0;
 
-      <section id="gallery" class="section">
-        <div class="section-heading">
-          <p class="eyebrow">Галерея</p>
-          <h2>Откройте для себя разные стороны Швеции</h2>
-        </div>
-        <div class="gallery-shell">
-          <div class="gallery-main">
-            <img id="featured-image" src="Stockholm.jpg" alt="Стокгольм" />
-            <div class="gallery-caption">
-              <p id="gallery-title">Стокгольм</p>
-              <h3 id="gallery-description">Уютные улицы, вода и атмосфера шведской столицы.</h3>
-            </div>
-          </div>
-          <div class="gallery-controls">
-            <button class="thumb active" data-index="0" data-title="Стокгольм" data-description="Уютные улицы, вода и атмосфера шведской столицы." data-image="Stockholm.jpg">
-              <img src="Stockholm.jpg" alt="Стокгольм" />
-            </button>
-            <button class="thumb" data-index="1" data-title="Стокгольм 2" data-description="Ещё один вид на город и его характерные силуэты." data-image="Stockholm2.jpg">
-              <img src="Stockholm2.jpg" alt="Стокгольм 2" />
-            </button>
-            <button class="thumb" data-index="2" data-title="Стокгольм 3" data-description="Новый ракурс и особая атмосфера северной столицы." data-image="Stockholm3.jpg">
-              <img src="Stockholm3.jpg" alt="Стокгольм 3" />
-            </button>
-          </div>
-          <button class="button secondary" id="random-btn">Показать другой уголок</button>
-        </div>
-      </section>
-
-      <section id="highlights" class="section section-alt">
-        <div class="section-heading">
-          <p class="eyebrow">Особенности</p>
-          <h2>Что делает Швецию особенной</h2>
-        </div>
-        <div class="cards">
-          <article class="card">
-            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" alt="Шведская природа" />
-            <h3>🌲 Природа</h3>
-            <p>Тысячи озёр, густые леса, острова и горные маршруты в северной части страны.</p>
-          </article>
-          <article class="card">
-            <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=900&q=80" alt="Города Швеции" />
-            <h3>🏙️ Города</h3>
-            <p>Стокгольм, Гётеборг и Мальмё — яркие примеры современного шведского дизайна и жизни.</p>
-          </article>
-          <article class="card">
-            <img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=900&q=80" alt="Культура Швеции" />
-            <h3>🧭 Культура</h3>
-            <p>Музеи, литература, фьорды, зима с северным сиянием и лето с белыми ночами.</p>
-          </article>
-        </div>
-        <a class="button" href="more.html">Больше интерактива</a>
-      </section>
-
-      <section id="cities" class="section">
-        <div class="section-heading">
-          <p class="eyebrow">Города</p>
-          <h2>Три места, которые стоит увидеть</h2>
-        </div>
-        <div class="city-list">
-          <article>
-            <h3>Стокгольм</h3>
-            <p>Красивая столица на островах с крепостями, набережными и современным искусством.</p>
-          </article>
-          <article>
-            <h3>Гётеборг</h3>
-            <p>Портовый город с уютными районами, кафе и живой атмосферой у воды.</p>
-          </article>
-          <article>
-            <h3>Лаппланд</h3>
-            <p>Северная часть страны, где зимой можно увидеть северное сияние и покататься на собачьих упряжках.</p>
-          </article>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <p>Сделано для вдохновения — пусть Швеция станет частью вашего следующего путешествия.</p>
-    </footer>
-
-    <script src="script.js"></script>
+      button.addEventListener('click', () => {
+        count += 1;
+        countElem.textContent = count;
+        if (count % 10 === 0) {
+          button.textContent = `Ещё +${count}`;
+        } else {
+          button.textContent = 'Кликни меня';
+        }
+      });
+    </script>
   </body>
 </html>
