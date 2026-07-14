@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -360,10 +360,11 @@
             0% { transform: scale(1); }
             100% { transform: scale(1.05); }
         }
-        .lang-sv .label-sv { display: inline; }
-        .lang-sv .label-ru { display: none; }
-        .lang-ru .label-sv { display: none; }
-        .lang-ru .label-ru { display: inline; }
+        /* Скрываем шведский по умолчанию, показываем после победы */
+        .label-sv { display: none; }
+        .label-ru { display: inline; }
+        .game-container.win .label-sv { display: inline; }
+        .game-container.win .label-ru { display: none; }
         @media (max-width: 800px) {
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .click-buttons { grid-template-columns: 1fr 1fr; }
@@ -378,10 +379,10 @@
     </style>
 </head>
 <body>
-<div class="game-container" id="app" :class="{ win: gameWon, 'lang-sv': gameWon }">
+<div class="game-container" id="app" :class="{ win: gameWon }">
     <h1>
-        <span v-if="!gameWon">🇸🇪 Sverige Clicker</span>
-        <span v-if="gameWon">🇸🇪 Sverige Klicker</span>
+        <span class="label-ru">🇸🇪 Sverige Clicker</span>
+        <span class="label-sv">🇸🇪 Sverige Klicker</span>
         <span v-if="gameWon" class="win-badge">🏆 DU BOR I SVERIGE!</span>
     </h1>
 
