@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Кликер — Швеция</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif;
+        background: radial-gradient(circle at top left, #70d5ff, #07131f 55%);
+        color: #f3f8ff;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 28px;
+        padding: 40px;
+        text-align: center;
+        width: min(100%, 420px);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+      }
+
+      h1 {
+        margin: 0 0 18px;
+        font-size: 2.2rem;
+      }
+
+      .count {
+        margin: 0 auto 28px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(78, 199, 243, 0.14);
+        border: 1px solid rgba(78, 199, 243, 0.32);
+        font-size: 3rem;
+        color: #eaf8ff;
+      }
+
+      .btn {
+        padding: 16px 30px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #4ec7f3, #8fd9ff);
+        color: #04131d;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .links {
+        margin-top: 24px;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .links a {
+        color: #8fd9ff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Кликер</h1>
+      <div class="count" id="count">0</div>
+      <button class="btn" id="clickBtn">Кликни меня</button>
+      <div class="links">
+        <a href="index.html">← Назад</a>
+        <a href="more.html">Больше интерактива →</a>
+      </div>
+    </div>
+
+    <script>
+      const countElem = document.getElementById('count');
+      const button = document.getElementById('clickBtn');
+      let count = 0;
+
+      button.addEventListener('click', () => {
+        count += 1;
+        countElem.textContent = count;
+        if (count % 10 === 0) {
+          button.textContent = `Ещё +${count}`;
+        } else {
+          button.textContent = 'Кликни меня';
+        }
+      });
+    </script>
+  </body>
+</html>
