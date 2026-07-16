@@ -254,6 +254,8 @@
         .shop-item .buy-btn.fika-auto-btn:disabled { background: #8f6a4b; opacity: 0.4; }
         .shop-item .buy-btn.fika-upgrade-btn { background: #c47a3a; box-shadow: 0 4px 0 #8a5a2a; }
         .shop-item .buy-btn.fika-upgrade-btn:disabled { background: #c47a3a; opacity: 0.4; }
+        .shop-item .buy-btn.sale-btn { background: #ff6b35; box-shadow: 0 4px 0 #cc4400; color: white; }
+        .shop-item .buy-btn.sale-btn:disabled { background: #ff6b35; opacity: 0.4; }
         .fika-area {
             background: #c7b3a2;
             padding: 14px 18px;
@@ -285,7 +287,7 @@
         .fika-timer { background: #1f3a2a; color: #f2e8d0; padding: 4px 14px; border-radius: 40px; font-weight: 700; font-size: 0.9rem; }
         .bottom-area { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 8px; }
         .bottom-area .badge { background: #2d4a3d; color: #f2e8d0; padding: 2px 14px; border-radius: 30px; font-size: 0.8rem; }
-        .reset-btn, .prestige-btn, .win-btn, .sale-btn, .full-reset-btn {
+        .reset-btn, .prestige-btn, .win-btn, .full-reset-btn {
             border: none;
             padding: 5px 16px;
             border-radius: 40px;
@@ -318,13 +320,6 @@
             0% { box-shadow: 0 4px 0 #b8860b, 0 0 20px rgba(255,215,0,0.2); }
             100% { box-shadow: 0 4px 0 #b8860b, 0 0 40px rgba(255,215,0,0.6); }
         }
-        .sale-btn {
-            background: #ff6b35;
-            color: white;
-            box-shadow: 0 4px 0 #cc4400;
-        }
-        .sale-btn:active { transform: translateY(4px); box-shadow: 0 0px 0 #cc4400; }
-        .sale-btn:disabled { opacity: 0.4; transform: translateY(2px); box-shadow: 0 2px 0 #cc4400; pointer-events: none; }
         .full-reset-btn {
             background: #e17055;
             color: white;
@@ -482,7 +477,7 @@
     </div>
 
     <!-- Дополнительные статы -->
-    <div class="stats-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; margin-top: 4px;">
+    <div class="stats-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; margin-top: 4px;">
         <div class="stat-card">
             <div class="label">
                 <span class="label-ru">👷 Жители</span>
@@ -525,6 +520,13 @@
             </div>
             <div class="value" style="color:#8f6a4b;">×{{ fikaLevel + 3 }}</div>
         </div>
+        <div class="stat-card">
+            <div class="label">
+                <span class="label-ru">☕ Кофе</span>
+                <span class="label-sv">☕ Kaffe</span>
+            </div>
+            <div class="value" style="color:#dbb494;">+{{ coffeeMultiplier }}</div>
+        </div>
     </div>
 
     <!-- Кнопки кликов -->
@@ -544,14 +546,16 @@
             <span class="sub">+{{ ikeaBuildMultiplier + 1 }}</span>
         </button>
         <button class="click-btn btn-minecraft" @click="clickNotch">
+            <span class="badge" v-if="minecraftMultiplier > 0">+{{ minecraftMultiplier }}</span>
             <span class="icon">🟫</span>
             <span>Notch</span>
-            <span class="sub">+{{ fikaMultiplier }}</span>
+            <span class="sub">+{{ minecraftMultiplier + 1 }}</span>
         </button>
         <button class="click-btn btn-fika" :class="{ active: fikaActive }" @click="clickFika">
+            <span class="badge" v-if="coffeeMultiplier > 0">+{{ coffeeMultiplier }}</span>
             <span class="icon">☕</span>
             <span>Fika</span>
-            <span class="sub">+{{ fikaMultiplier }}</span>
+            <span class="sub">+{{ coffeeMultiplier + 1 }}</span>
         </button>
     </div>
 
@@ -645,6 +649,40 @@
         <div class="shop-item">
             <div class="info">
                 <span class="name">
+                    <span class="label-ru">☕ Кофе</span>
+                    <span class="label-sv">☕ Kaffe</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">☕ {{ getDiscountedPrice(coffeeCost) }} Fika</span>
+                    <span class="label-sv">☕ {{ getDiscountedPrice(coffeeCost) }} Fika</span>
+                    <span v-if="discount > 0" class="sale-badge">-{{ discount }}%</span>
+                </span>
+            </div>
+            <button class="buy-btn fika-upgrade-btn" @click="buyCoffee" :disabled="fika < getDiscountedPrice(coffeeCost)">
+                <span class="label-ru">+1 Fika/клик</span>
+                <span class="label-sv">+1 Fika/klick</span>
+            </button>
+        </div>
+        <div class="shop-item">
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">⛏️ Майнкрафт</span>
+                    <span class="label-sv">⛏️ Minecraft</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">⛏️ {{ getDiscountedPrice(minecraftCost) }} Notch</span>
+                    <span class="label-sv">⛏️ {{ getDiscountedPrice(minecraftCost) }} Notch</span>
+                    <span v-if="discount > 0" class="sale-badge">-{{ discount }}%</span>
+                </span>
+            </div>
+            <button class="buy-btn green" @click="buyMinecraft" :disabled="notch < getDiscountedPrice(minecraftCost)">
+                <span class="label-ru">+1 Notch/клик</span>
+                <span class="label-sv">+1 Notch/klick</span>
+            </button>
+        </div>
+        <div class="shop-item">
+            <div class="info">
+                <span class="name">
                     <span class="label-ru">🌾 Ферма</span>
                     <span class="label-sv">🌾 Gård</span>
                 </span>
@@ -679,8 +717,8 @@
         <div class="shop-item">
             <div class="info">
                 <span class="name">
-                    <span class="label-ru">💎 Алмазная шахта</span>
-                    <span class="label-sv">💎 Diamantgruva</span>
+                    <span class="label-ru">💎 Шахта</span>
+                    <span class="label-sv">💎 Gruva</span>
                 </span>
                 <span class="cost">
                     <span class="label-ru">⛏️ {{ getDiscountedPrice(mineCost) }} Notch</span>
@@ -689,8 +727,8 @@
                 </span>
             </div>
             <button class="buy-btn purple" @click="buyMine" :disabled="notch < getDiscountedPrice(mineCost)">
-                <span class="label-ru">+1 (+0.1 Notch/с)</span>
-                <span class="label-sv">+1 (+0.1 Notch/s)</span>
+                <span class="label-ru">+1 (+1 Notch/с)</span>
+                <span class="label-sv">+1 (+1 Notch/s)</span>
             </button>
         </div>
         <div class="shop-item">
@@ -722,9 +760,9 @@
                     <span v-if="discount > 0" class="sale-badge">-{{ discount }}%</span>
                 </span>
             </div>
-            <button class="buy-btn fika-auto-btn" @click="buyFikaAuto" :disabled="kr < getDiscountedPrice(fikaAutoCost) || fikaAutoActive">
-                <span class="label-ru">{{ fikaAutoActive ? '✅ АКТИВНО' : '+1 Fika/5с' }}</span>
-                <span class="label-sv">{{ fikaAutoActive ? '✅ AKTIV' : '+1 Fika/5s' }}</span>
+            <button class="buy-btn fika-auto-btn" @click="buyFikaAuto" :disabled="kr < getDiscountedPrice(fikaAutoCost)">
+                <span class="label-ru">+1 Fika/с ({{ fikaAutoLevel }})</span>
+                <span class="label-sv">+1 Fika/s ({{ fikaAutoLevel }})</span>
             </button>
         </div>
         <div class="shop-item">
@@ -759,6 +797,23 @@
             <button class="buy-btn fika-upgrade-btn" @click="upgradeFika" :disabled="fika < getDiscountedPrice(fikaUpgradeCost)">
                 <span class="label-ru">×{{ fikaLevel + 3 }} → ×{{ fikaLevel + 4 }}</span>
                 <span class="label-sv">×{{ fikaLevel + 3 }} → ×{{ fikaLevel + 4 }}</span>
+            </button>
+        </div>
+        <!-- РАСПРОДАЖА - появляется после победы -->
+        <div class="shop-item" v-if="gameWon">
+            <div class="info">
+                <span class="name">
+                    <span class="label-ru">🏷️ РАСПРОДАЖА</span>
+                    <span class="label-sv">🏷️ REA</span>
+                </span>
+                <span class="cost">
+                    <span class="label-ru">💰 {{ salePrice }} kr</span>
+                    <span class="label-sv">💰 {{ salePrice }} kr</span>
+                </span>
+            </div>
+            <button class="buy-btn sale-btn" @click="buySale" :disabled="kr < salePrice || discount >= 99">
+                <span class="label-ru">+5% скидка ({{ discount }}%)</span>
+                <span class="label-sv">+5% rabatt ({{ discount }}%)</span>
             </button>
         </div>
     </div>
@@ -804,15 +859,6 @@
                 🏆 <span class="label-ru">ПОБЕДИТЬ!</span>
                 <span class="label-sv">VINNA!</span>
             </button>
-            <!-- РАСПРОДАЖА - появляется только после победы -->
-            <button class="sale-btn" 
-                    v-if="gameWon" 
-                    @click="upgradeSale" 
-                    :disabled="discount >= 95 || saleCooldown > 0">
-                🏷️ <span class="label-ru">РАСПРОДАЖА ({{ discount }}%)</span>
-                <span class="label-sv">REA ({{ discount }}%)</span>
-            </button>
-            <!-- ПОЛНЫЙ СБРОС - даёт автокликер -->
             <button class="full-reset-btn" :class="{ active: autoclickerActive }" @click="toggleAutoclicker" :disabled="autoclickerCooldown > 0">
                 🔄 <span class="label-ru">{{ autoclickerActive ? 'АВТОКЛИКЕР ВКЛ' : 'ПОЛНЫЙ СБРОС' }}</span>
                 <span class="label-sv">{{ autoclickerActive ? 'AUTOKLICK PÅ' : 'HEL ÅTERSTÄLLNING' }}</span>
@@ -843,6 +889,8 @@ new Vue({
         ikeaLevel: 0,
         notchUpgrades: 0,
         ikeaBuildUpgrades: 0,
+        coffeeLevel: 0,
+        minecraftLevel: 0,
         farms: 0,
         factories: 0,
         mines: 0,
@@ -851,6 +899,7 @@ new Vue({
         fikaTimer: 0,
         fikaLevel: 0,
         fikaBonus: 1,
+        fikaAutoLevel: 0,
         fikaAutoActive: false,
         fikaAutoActivateActive: false,
         prestigeLevel: 0,
@@ -860,7 +909,7 @@ new Vue({
         gameWon: false,
         showWinOverlay: false,
         discount: 0,
-        saleCooldown: 0,
+        salePrice: 1000,
         autoclickerActive: false,
         autoclickerCooldown: 0,
         krFraction: 0,
@@ -874,6 +923,8 @@ new Vue({
     },
     computed: {
         residents() { return this.houses; },
+        coffeeMultiplier() { return this.coffeeLevel; },
+        minecraftMultiplier() { return this.minecraftLevel; },
         fikaMultiplier() {
             let base = 3 + this.fikaLevel;
             if (this.fikaActive) {
@@ -893,18 +944,20 @@ new Vue({
             return base * this.incomeMultiplier;
         },
         notchPerSec() {
-            return this.mines * 0.1;
+            return this.mines * 1.0;
         },
         govCost() { return Math.floor(50 * Math.pow(1.15, this.govCount)); },
         houseCost() { return Math.floor(30 * Math.pow(1.2, this.houses)); },
         ikeaUpgradeCost() { return Math.floor(40 * Math.pow(1.6, this.ikeaLevel)); },
         notchUpgradeCost() { return Math.floor(10 * Math.pow(1.5, this.notchUpgrades)); },
         ikeaBuildCost() { return Math.floor(10 * Math.pow(1.5, this.ikeaBuildUpgrades)); },
+        coffeeCost() { return Math.floor(20 * Math.pow(1.5, this.coffeeLevel)); },
+        minecraftCost() { return Math.floor(10 * Math.pow(1.5, this.minecraftLevel)); },
         farmCost() { return Math.floor(60 * Math.pow(1.3, this.farms)); },
         factoryCost() { return Math.floor(50 * Math.pow(1.4, this.factories)); },
         mineCost() { return Math.floor(30 * Math.pow(1.5, this.mines)); },
         marketCost() { return Math.floor(200 * Math.pow(1.8, this.markets)); },
-        fikaAutoCost() { return Math.floor(100 * Math.pow(2, this.fikaAutoActive ? 1 : 0)); },
+        fikaAutoCost() { return Math.floor(100 * Math.pow(1.5, this.fikaAutoLevel)); },
         fikaAutoActivateCost() { return Math.floor(3000 * Math.pow(2, this.fikaAutoActivateActive ? 1 : 0)); },
         fikaUpgradeCost() { return Math.floor(20 * Math.pow(1.8, this.fikaLevel)); },
         canWin() {
@@ -934,17 +987,19 @@ new Vue({
             this.checkAchievements();
         },
         clickNotch() {
-            let add = 1 * this.fikaMultiplier;
-            this.notch += add;
+            let base = 1 + this.minecraftMultiplier;
+            let total = base * this.fikaMultiplier;
+            this.notch += total;
             this.totalClicks++;
-            this.showPopup('+' + add.toFixed(0) + ' Notch', '#5d7a3d');
+            this.showPopup('+' + total.toFixed(0) + ' Notch', '#5d7a3d');
             this.checkAchievements();
         },
         clickFika() {
-            let add = 1 * this.fikaMultiplier;
-            this.fika += add;
+            let base = 1 + this.coffeeMultiplier;
+            let total = base * this.fikaMultiplier;
+            this.fika += total;
             this.totalClicks++;
-            this.showPopup('+' + add.toFixed(0) + ' ☕', '#8f6a4b');
+            this.showPopup('+' + total.toFixed(0) + ' ☕', '#8f6a4b');
             this.checkAchievements();
         },
         showPopup(text, color) {
@@ -1013,17 +1068,6 @@ new Vue({
                 }
             }, 10000);
         },
-        // РАСПРОДАЖА (только после победы)
-        upgradeSale() {
-            if (this.discount < 95 && this.saleCooldown <= 0 && this.gameWon) {
-                this.discount = Math.min(95, this.discount + 5);
-                this.saleCooldown = 10;
-                this.showPopup('🏷️ Скидка ' + this.discount + '%!', '#ff6b35');
-                setInterval(() => {
-                    if (this.saleCooldown > 0) this.saleCooldown--;
-                }, 1000);
-            }
-        },
         // АВТОКЛИКЕР (кнопка "ПОЛНЫЙ СБРОС")
         toggleAutoclicker() {
             if (this.autoclickerCooldown > 0) return;
@@ -1053,6 +1097,17 @@ new Vue({
                 setInterval(() => {
                     if (this.autoclickerCooldown > 0) this.autoclickerCooldown--;
                 }, 1000);
+            }
+        },
+        // РАСПРОДАЖА - ПОКУПАЕТСЯ В МАГАЗИНЕ
+        buySale() {
+            const price = this.salePrice;
+            if (this.kr >= price && this.discount < 99 && this.gameWon) {
+                this.kr -= price;
+                this.discount = Math.min(99, this.discount + 5);
+                this.salePrice = Math.floor(this.salePrice * 1.5);
+                this.showPopup('🏷️ Скидка ' + this.discount + '%!', '#ff6b35');
+                this.checkAchievements();
             }
         },
         // Покупки
@@ -1093,6 +1148,22 @@ new Vue({
                 this.showPopup('🏗️ +1 IKL/клик!', '#0058a3');
             }
         },
+        buyCoffee() {
+            const price = this.getDiscountedPrice(this.coffeeCost);
+            if (this.fika >= price) {
+                this.fika -= price;
+                this.coffeeLevel++;
+                this.showPopup('☕ +1 Fika/клик!', '#dbb494');
+            }
+        },
+        buyMinecraft() {
+            const price = this.getDiscountedPrice(this.minecraftCost);
+            if (this.notch >= price) {
+                this.notch -= price;
+                this.minecraftLevel++;
+                this.showPopup('⛏️ +1 Notch/клик!', '#5d7a3d');
+            }
+        },
         buyFarm() {
             const price = this.getDiscountedPrice(this.farmCost);
             if (this.kr >= price) {
@@ -1124,15 +1195,16 @@ new Vue({
         },
         buyFikaAuto() {
             const price = this.getDiscountedPrice(this.fikaAutoCost);
-            if (this.kr >= price && !this.fikaAutoActive) {
+            if (this.kr >= price) {
                 this.kr -= price;
+                this.fikaAutoLevel++;
                 this.fikaAutoActive = true;
-                this.showPopup('☕ Автодобыча Fika!', '#8f6a4b');
+                this.showPopup('☕ Автодобыча Fika +1/с!', '#8f6a4b');
                 if (this.fikaAutoInterval) clearInterval(this.fikaAutoInterval);
                 this.fikaAutoInterval = setInterval(() => {
-                    this.fika += 1;
-                    this.showPopup('+1 ☕ (авто)', '#8f6a4b');
-                }, 5000);
+                    this.fika += this.fikaAutoLevel;
+                    this.showPopup('+' + this.fikaAutoLevel + ' ☕ (авто)', '#8f6a4b');
+                }, 1000);
             }
         },
         buyFikaAutoActivate() {
@@ -1190,11 +1262,14 @@ new Vue({
                 this.ikeaLevel = 0;
                 this.notchUpgrades = 0;
                 this.ikeaBuildUpgrades = 0;
+                this.coffeeLevel = 0;
+                this.minecraftLevel = 0;
                 this.farms = 0;
                 this.factories = 0;
                 this.mines = 0;
                 this.markets = 0;
                 this.fikaLevel = 0;
+                this.fikaAutoLevel = 0;
                 this.fikaAutoActive = false;
                 this.fikaAutoActivateActive = false;
                 this.krFraction = 0;
@@ -1270,9 +1345,9 @@ new Vue({
                 this.achievements.push('fika10');
                 this.showAchievement('Fika ×13!');
             }
-            if (this.fikaAutoActive && !this.achievements.includes('autoFika')) {
-                this.achievements.push('autoFika');
-                this.showAchievement('Автодобыча Fika!');
+            if (this.fikaAutoLevel >= 5 && !this.achievements.includes('autoFika5')) {
+                this.achievements.push('autoFika5');
+                this.showAchievement('Автодобыча Fika 5+/с');
             }
             if (this.fikaAutoActivateActive && !this.achievements.includes('autoActivate')) {
                 this.achievements.push('autoActivate');
@@ -1286,13 +1361,25 @@ new Vue({
                 this.achievements.push('sale50');
                 this.showAchievement('Скидка 50%!');
             }
-            if (this.discount >= 95 && !this.achievements.includes('sale95')) {
-                this.achievements.push('sale95');
-                this.showAchievement('Максимальная скидка 95%!');
+            if (this.discount >= 99 && !this.achievements.includes('sale99')) {
+                this.achievements.push('sale99');
+                this.showAchievement('Максимальная скидка 99%!');
             }
             if (this.autoclickerActive && !this.achievements.includes('autoclick')) {
                 this.achievements.push('autoclick');
                 this.showAchievement('🤖 Автокликер активирован!');
+            }
+            if (this.coffeeLevel >= 5 && !this.achievements.includes('coffee5')) {
+                this.achievements.push('coffee5');
+                this.showAchievement('☕ Кофе 5+');
+            }
+            if (this.minecraftLevel >= 5 && !this.achievements.includes('minecraft5')) {
+                this.achievements.push('minecraft5');
+                this.showAchievement('⛏️ Майнкрафт 5+');
+            }
+            if (this.mines >= 10 && !this.achievements.includes('mines10')) {
+                this.achievements.push('mines10');
+                this.showAchievement('10 шахт!');
             }
         },
         // Пассивный доход
@@ -1356,9 +1443,9 @@ new Vue({
                 }
                 if (this.fikaAutoActive) {
                     this.fikaAutoInterval = setInterval(() => {
-                        this.fika += 1;
-                        this.showPopup('+1 ☕ (авто)', '#8f6a4b');
-                    }, 5000);
+                        this.fika += this.fikaAutoLevel;
+                        this.showPopup('+' + this.fikaAutoLevel + ' ☕ (авто)', '#8f6a4b');
+                    }, 1000);
                 }
                 if (this.fikaAutoActivateActive) {
                     this.fikaAutoActivateInterval = setInterval(() => {
@@ -1380,12 +1467,15 @@ new Vue({
                 kr: this.kr, ik: this.ik, notch: this.notch, fika: this.fika,
                 fikaActive: this.fikaActive, fikaTimer: this.fikaTimer,
                 fikaLevel: this.fikaLevel, fikaBonus: this.fikaBonus,
+                fikaAutoLevel: this.fikaAutoLevel,
                 fikaAutoActive: this.fikaAutoActive,
                 fikaAutoActivateActive: this.fikaAutoActivateActive,
                 govCount: this.govCount, houses: this.houses,
                 ikeaLevel: this.ikeaLevel,
                 notchUpgrades: this.notchUpgrades,
                 ikeaBuildUpgrades: this.ikeaBuildUpgrades,
+                coffeeLevel: this.coffeeLevel,
+                minecraftLevel: this.minecraftLevel,
                 farms: this.farms, factories: this.factories,
                 mines: this.mines, markets: this.markets,
                 prestigeLevel: this.prestigeLevel,
@@ -1394,7 +1484,7 @@ new Vue({
                 achievements: this.achievements,
                 gameWon: this.gameWon,
                 discount: this.discount,
-                saleCooldown: this.saleCooldown,
+                salePrice: this.salePrice,
                 autoclickerActive: this.autoclickerActive,
                 autoclickerCooldown: this.autoclickerCooldown,
                 krFraction: this.krFraction,
